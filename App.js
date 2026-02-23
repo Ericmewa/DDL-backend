@@ -28,6 +28,18 @@ export default function App() {
         <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
         <Stack.Screen name="CustomerSupport" component={CustomerSupportScreen} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
+        <Stack.Screen name="ResetPassword" component={require('./screens/ResetPasswordScreen').default} />
+        <Stack.Screen name="Services" component={require('./screens/ServicesScreen').default} />
+        <Stack.Screen name="Orders" component={require('./screens/OrdersScreen').default} />
+        <Stack.Screen name="History" component={require('./screens/HistoryScreen').default} />
+        <Stack.Screen name="Profile" component={require('./screens/ProfileScreen').default} />
+        <Stack.Screen name="SchedulePickup" component={require('./screens/SchedulePickupScreen').default} />
+        <Stack.Screen name="DryCleaning" component={require('./screens/DryCleaningScreen').default} />
+        <Stack.Screen name="WashFold" component={require('./screens/WashFoldScreen').default} />
+        <Stack.Screen name="Ironing" component={require('./screens/IroningScreen').default} />
+        <Stack.Screen name="ShoeCleaning" component={require('./screens/ShoeCleaningScreen').default} />
+        <Stack.Screen name="CarpetCleaning" component={require('./screens/CarpetCleaningScreen').default} />
+        <Stack.Screen name="Alterations" component={require('./screens/AlterationsScreen').default} />
       </Stack.Navigator>
     </NavigationContainer>
   );
