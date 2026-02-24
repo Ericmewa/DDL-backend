@@ -14,23 +14,26 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+// Convert USD to KES (using approximate exchange rate: 1 USD ≈ 130 KES)
+const USD_TO_KES = 130;
+
 const garmentTypes = [
-  { id: 1, name: 'Suit (2-piece)', basePrice: 15.99, icon: '👔' },
-  { id: 2, name: 'Dress', basePrice: 12.99, icon: '👗' },
-  { id: 3, name: 'Dress Shirt', basePrice: 4.99, icon: '👕' },
-  { id: 4, name: 'Blouse', basePrice: 5.99, icon: '👚' },
-  { id: 5, name: 'Tie', basePrice: 3.99, icon: '👔' },
-  { id: 6, name: 'Sweater', basePrice: 7.99, icon: '🧥' },
-  { id: 7, name: 'Coat/Jacket', basePrice: 14.99, icon: '🧥' }
+  { id: 1, name: 'Suit (2-piece)', basePrice: 15.99 * USD_TO_KES, icon: '👔' },
+  { id: 2, name: 'Dress', basePrice: 12.99 * USD_TO_KES, icon: '👗' },
+  { id: 3, name: 'Dress Shirt', basePrice: 4.99 * USD_TO_KES, icon: '👕' },
+  { id: 4, name: 'Blouse', basePrice: 5.99 * USD_TO_KES, icon: '👚' },
+  { id: 5, name: 'Tie', basePrice: 3.99 * USD_TO_KES, icon: '👔' },
+  { id: 6, name: 'Sweater', basePrice: 7.99 * USD_TO_KES, icon: '🧥' },
+  { id: 7, name: 'Coat/Jacket', basePrice: 14.99 * USD_TO_KES, icon: '🧥' }
 ];
 
 const fabricTypes = [
-  { label: 'Cotton', value: 'cotton', upcharge: 0 },
-  { label: 'Silk (premium)', value: 'silk', upcharge: 5 },
-  { label: 'Wool (premium)', value: 'wool', upcharge: 3 },
-  { label: 'Linen', value: 'linen', upcharge: 2 },
-  { label: 'Polyester', value: 'polyester', upcharge: 0 },
-  { label: 'Rayon', value: 'rayon', upcharge: 1 }
+  { label: 'Cotton', value: 'cotton', upcharge: 0 * USD_TO_KES },
+  { label: 'Silk (premium)', value: 'silk', upcharge: 5 * USD_TO_KES },
+  { label: 'Wool (premium)', value: 'wool', upcharge: 3 * USD_TO_KES },
+  { label: 'Linen', value: 'linen', upcharge: 2 * USD_TO_KES },
+  { label: 'Polyester', value: 'polyester', upcharge: 0 * USD_TO_KES },
+  { label: 'Rayon', value: 'rayon', upcharge: 1 * USD_TO_KES }
 ];
 
 const DryCleaningScreen = ({ navigation }) => {
@@ -56,7 +59,7 @@ const DryCleaningScreen = ({ navigation }) => {
 
   const calculateItemPrice = (item) => {
     const fabricUpcharge = fabricTypes.find(f => f.value === fabricType)?.upcharge || 0;
-    const stainFee = stainTreatment ? 2 : 0;
+    const stainFee = stainTreatment ? 2 * USD_TO_KES : 0;
     return (item.basePrice + fabricUpcharge + stainFee) * (selectedItems[item.id] || 0);
   };
 
@@ -95,7 +98,8 @@ const DryCleaningScreen = ({ navigation }) => {
         specialInstructions,
         photos,
         expressService,
-        total: calculateTotal()
+        total: calculateTotal(),
+        currency: 'KES'
       };
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -128,7 +132,8 @@ const DryCleaningScreen = ({ navigation }) => {
         specialInstructions,
         photos,
         expressService,
-        total: calculateTotal()
+        total: calculateTotal(),
+        currency: 'KES'
       };
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -156,6 +161,11 @@ const DryCleaningScreen = ({ navigation }) => {
       return;
     }
     Alert.alert('Photo Upload', 'Photo upload logic goes here.');
+  };
+
+  // Format price in KES
+  const formatKES = (amount) => {
+    return `KES ${Math.round(amount).toLocaleString()}`;
   };
 
   return (
@@ -187,7 +197,7 @@ const DryCleaningScreen = ({ navigation }) => {
             <View key={item.id} style={styles.gridItem}>
               <Text style={styles.garmentIcon}>{item.icon}</Text>
               <Text style={styles.garmentName}>{item.name}</Text>
-              <Text style={styles.garmentPrice}>${item.basePrice.toFixed(2)}</Text>
+              <Text style={styles.garmentPrice}>{formatKES(item.basePrice)}</Text>
               <View style={styles.quantitySelector}>
                 <TouchableOpacity
                   style={styles.quantityButton}
@@ -217,7 +227,7 @@ const DryCleaningScreen = ({ navigation }) => {
               {fabricTypes.map((fabric) => (
                 <Picker.Item
                   key={fabric.value}
-                  label={`${fabric.label}${fabric.upcharge > 0 ? ` (+$${fabric.upcharge})` : ''}`}
+                  label={`${fabric.label}${fabric.upcharge > 0 ? ` (+${formatKES(fabric.upcharge)})` : ''}`}
                   value={fabric.value}
                 />
               ))}
@@ -231,7 +241,7 @@ const DryCleaningScreen = ({ navigation }) => {
           <View style={[styles.checkbox, stainTreatment && styles.checkboxChecked]}>
             {stainTreatment && <Icon name="check" size={16} color="#fff" />}
           </View>
-          <Text style={styles.checkboxLabel}>Stain treatment (+$2 per item)</Text>
+          <Text style={styles.checkboxLabel}>Stain treatment (+{formatKES(2 * USD_TO_KES)} per item)</Text>
         </TouchableOpacity>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Special Instructions</Text>
@@ -277,23 +287,23 @@ const DryCleaningScreen = ({ navigation }) => {
           <Text style={styles.priceCardTitle}>Price Breakdown</Text>
           <View style={styles.priceRow}>
             <Text>Items subtotal</Text>
-            <Text>${calculateSubtotal().toFixed(2)}</Text>
+            <Text>{formatKES(calculateSubtotal())}</Text>
           </View>
           {stainTreatment && (
             <View style={styles.priceRow}>
               <Text>Stain treatment fee</Text>
-              <Text>+${(Object.values(selectedItems).reduce((a, b) => a + b, 0) * 2).toFixed(2)}</Text>
+              <Text>+{formatKES(Object.values(selectedItems).reduce((a, b) => a + b, 0) * 2 * USD_TO_KES)}</Text>
             </View>
           )}
           {expressService && (
             <View style={styles.priceRow}>
               <Text>Express service (50%)</Text>
-              <Text>+${calculateExpressFee().toFixed(2)}</Text>
+              <Text>+{formatKES(calculateExpressFee())}</Text>
             </View>
           )}
           <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={styles.totalText}>Total</Text>
-            <Text style={styles.totalAmount}>${calculateTotal().toFixed(2)}</Text>
+            <Text style={styles.totalAmount}>{formatKES(calculateTotal())}</Text>
           </View>
         </View>
         <View style={styles.buttonContainer}>

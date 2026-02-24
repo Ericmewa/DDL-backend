@@ -8,6 +8,8 @@ import {
   StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from 'react-native';
+import { require } from 'react-native';
 
 export default function PricingOverviewScreen({ navigation }) {
   const [quantities, setQuantities] = useState({
@@ -40,6 +42,14 @@ export default function PricingOverviewScreen({ navigation }) {
     { name: 'History', icon: '📋', screen: 'History' },
     { name: 'Profile', icon: '👤', screen: 'Profile' },
   ];
+
+  // Add service icons
+  const serviceIcons = {
+    dryCleaning: require('../assets/drycleaning.png'),
+    washFold: require('../assets/washfold.png'),
+    ironing: require('../assets/ironing.png'),
+    shoeCleaning: require('../assets/shoecleaning.png'),
+  };
 
   return (
     <View style={styles.container}>
@@ -76,6 +86,9 @@ export default function PricingOverviewScreen({ navigation }) {
 
         {/* Dry Cleaning */}
         <View style={styles.serviceCard}>
+          <View style={styles.serviceIconContainer}>
+            <Image source={serviceIcons.dryCleaning} style={styles.serviceIcon} />
+          </View>
           <View style={styles.serviceHeader}>
             <Text style={styles.serviceName}>Dry Cleaning</Text>
             <Text style={styles.serviceNote}>Starting from KES 250 per item</Text>
@@ -103,6 +116,9 @@ export default function PricingOverviewScreen({ navigation }) {
 
         {/* Wash & Fold */}
         <View style={styles.serviceCard}>
+          <View style={styles.serviceIconContainer}>
+            <Image source={serviceIcons.washFold} style={styles.serviceIcon} />
+          </View>
           <View style={styles.serviceHeader}>
             <Text style={styles.serviceName}>Wash & Fold</Text>
             <Text style={styles.serviceNote}>Pricing is per kg for laundry</Text>
@@ -130,6 +146,9 @@ export default function PricingOverviewScreen({ navigation }) {
 
         {/* Ironing */}
         <View style={styles.serviceCard}>
+          <View style={styles.serviceIconContainer}>
+            <Image source={serviceIcons.ironing} style={styles.serviceIcon} />
+          </View>
           <View style={styles.serviceHeader}>
             <Text style={styles.serviceName}>Ironing</Text>
             <Text style={styles.serviceNote}>Starting from KES 100 per item</Text>
@@ -157,6 +176,9 @@ export default function PricingOverviewScreen({ navigation }) {
 
         {/* Shoe Cleaning */}
         <View style={styles.serviceCard}>
+          <View style={styles.serviceIconContainer}>
+            <Image source={serviceIcons.shoeCleaning} style={styles.serviceIcon} />
+          </View>
           <View style={styles.serviceHeader}>
             <Text style={styles.serviceName}>Shoe Cleaning</Text>
             <Text style={styles.serviceNote}>Starting from KES 300 per pair</Text>
@@ -449,5 +471,19 @@ const styles = StyleSheet.create({
   navTextActive: {
     color: '#007bff',
     fontWeight: '500',
+  },
+  serviceIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: '#f0f7ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  serviceIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
   },
 });

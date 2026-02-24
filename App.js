@@ -11,13 +11,15 @@ import OrderTrackingScreen from './screens/OrderTrackingScreen';
 import OrderHistoryScreen from './screens/OrderHistoryScreen';
 import CustomerSupportScreen from './screens/CustomerSupportScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Onboarding">
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
